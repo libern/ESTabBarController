@@ -1,17 +1,20 @@
 ![ESTabBarController](logo.png)
 
-[![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](#swift-package-manager)
-[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![CocoaPods](https://img.shields.io/cocoapods/v/ESTabBarController-swift.svg)](http://cocoapods.org/pods/ESTabBarController-swift)
 [![Swift v5](https://img.shields.io/badge/Swift-5-orange.svg?style=flat)](https://developer.apple.com/swift/)
-[![Twitter](https://img.shields.io/badge/Twitter-@lihao_iOS-blue.svg?style=flat)](https://twitter.com/lihao_iOS)
-[![Twitter](https://img.shields.io/badge/Weibo-@李昊_____-orange.svg?style=flat)](http://weibo.com/5120522686/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1)
-[![Chat Gitter.im](https://badges.gitter.im/ESTabBarController/Lobby.svg)](https://gitter.im/ESTabBarController/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
+[![GitHub](https://img.shields.io/badge/GitHub-theNightLight-blue.svg?style=flat)](https://github.com/theNightLight)
 
 ### [For English](README.md)
 
+> **说明**：本项目为 [eggswift/ESTabBarController](https://github.com/eggswift/ESTabBarController) 的个人维护分支，主要新增 iOS 26 Liquid Glass 适配。**不提供 CocoaPods / Swift Package Manager 集成**，以免影响上游官方发布；请通过下载源码手动集成。
+
 **ESTabBarController**是一个高度自定义的TabBarController组件，继承自UITabBarController。
+
+本分支在 `ESTabBar` 上新增 iOS 26 布局相关属性，**默认开箱即用**：
+
+- **`designType`**（默认 `.automatic`）：`.automatic` 随系统版本自动适配布局；`.old` 全版本强制使用传统 TabBar 布局（iOS 26+ 隐藏 platter、全宽均分）
+- **`usesSystemGlassEffect`**（默认 `true`）：仅当 `designType == .automatic` 且在 iOS 26+ 生效；`true` 启用系统 Liquid Glass 双层嵌入，`false` 隐藏系统按钮、改用 `ESTabBarItemContainer` 全宽自定义布局
+
+**默认效果**：不修改任何配置时，iOS 26 自动呈现系统玻璃 TabBar；iOS 26 以下与 upstream 一致，走传统布局。
 
 ### 为什么要使用?
 
@@ -31,38 +34,57 @@
 8| 支持默认通知样式 | 如果直接使用ESTabBarController进行初始化，你会得到与UITabBarController完全相同的仿系统通知样式 </p> UITabBarController样式: </p> ![enter image description here](Resources/SystemNotificationStyle.png) </p> ESTabBarController仿系统样式: </p> ![enter image description here](Resources/CustomNotificationStyle.png)
 9| 支持自定义通知样式 | 使用ESTabBarController可以实现：</p> 1. 自定义提醒动画 </p> ![enter image description here](Resources/CustomNofticationGif.gif) </p> ![enter image description here](Resources/CustomNofticationGif2.gif) </p> 2. 自定义提醒样式 </p> ![enter image description here](Resources/CustomNofticationGif3.gif) </p> 3. 等等...... </p>
 10| 支持Lottie | 通过自定义ContentView，能够添加Lottie的LAAnimationView到Item </p> ![enter image description here](Resources/LottieGif.gif)
+11| 支持 iOS 26 Liquid Glass 适配 | iOS 26 系统 TabBar 引入 Liquid Glass 效果。ESTabBarController 通过 `designType` 与 `usesSystemGlassEffect` 提供三种布局策略（需 iOS 26+）：</p> 1. **系统玻璃模式**（默认）：`designType = .automatic`，`usesSystemGlassEffect = true`。自定义 item 嵌入系统 `_UITabBarPlatterView` 双层结构，保留系统玻璃合成与选中动画。</p> ![系统玻璃模式](Resources/systemAndGlass.gif) </p> 2. **自定义容器模式**：`designType = .automatic`，`usesSystemGlassEffect = false`。隐藏系统按钮，使用 `ESTabBarItemContainer` 全宽均分布局，适合完全自定义外观。</p> ![无系统玻璃模式](Resources/systemNoGlass.gif) </p> 3. **强制旧版布局**：`designType = .old`。全版本走传统布局；iOS 26+ 隐藏 platter，Tab 项全宽均分，与 iOS 26 以下表现一致。</p> ![强制旧版布局](Resources/mandatoryOldDesign.gif) </p> 4. **系统玻璃 + Badge**：玻璃模式下未选中 item 显示 badge，选中项自动隐藏 badge。</p> ![系统玻璃 + Badge](Resources/systemWithBadgeAndGlass.gif)
 
 ## 支持环境
 
 * Xcode 8 or later
-* iOS 8.0 or later
+* iOS 8.0 or later（Liquid Glass 适配需 iOS 26.0+）
 * ARC
 * Swift 5 or later
 
 ## Demo
 
-下载后运行ESTabBarControllerExample工程，你可以看到一些使用ESTabBarController实现的自定义TabBar的更多例子。
+下载后运行 ESTabBarControllerExample 工程，你可以看到一些使用 ESTabBarController 实现的自定义 TabBar 的更多例子。Basic 分组中可体验上述 iOS 26 布局模式。
+
+### iOS 26 Liquid Glass 配置
+
+```swift
+let tabBarController = ESTabBarController()
+if let tabBar = tabBarController.tabBar as? ESTabBar {
+    // 布局风格：.automatic（默认，随系统版本适配）或 .old（强制旧版）
+    tabBar.designType = .automatic
+
+    // 仅 designType == .automatic 且 iOS 26+ 有效
+    // true：系统玻璃双层嵌入（默认）；false：自定义容器全宽布局
+    tabBar.usesSystemGlassEffect = true
+}
+```
+
+| 属性 | 默认值 | 说明 |
+|------|--------|------|
+| `designType` | `.automatic` | `.old` 时忽略 `usesSystemGlassEffect`，全版本走传统布局 |
+| `usesSystemGlassEffect` | `true` | 仅 `.automatic` + iOS 26+ 生效 |
 
 ## 如何安装
 
-### CocoaPods
+本项目**仅支持源码下载 / 手动集成**，不使用 CocoaPods 与 Swift Package Manager。
 
-``` ruby
-pod "ESTabBarController-swift"
+### 下载源码
+
+```bash
+git clone https://github.com/theNightLight/ESTabBarController.git
+cd ESTabBarController
+open ESTabBarControllerExample/ESTabBarControllerExample.xcodeproj
 ```
 
-### Carthage
+### 集成到你的工程
 
-```ruby
-github "eggswift/ESTabBarController"
-```
+1. 将 `ESTabBarControllerExample/ESTabBarControllerExample/Sources/` 目录下的 Swift 文件拖入你的 Xcode 工程。
+2. 在需要使用的地方 `import` 对应模块（若作为 App Target 源码集成则无需额外 import）。
+3. 将 `ESTabBarController` 作为根控制器使用，参考 Example 工程中的用法。
 
-### 手动安装
-
-``` ruby
-git clone https://github.com/eggswift/ESTabBarController.git
-open ESTabBarController
-```
+> 如需使用上游官方 CocoaPods / SPM，请访问 [eggswift/ESTabBarController](https://github.com/eggswift/ESTabBarController)。
 
 ## 未完成的事
 
@@ -74,10 +96,11 @@ open ESTabBarController
 
 ## 赞助
 
-您可以通过查看我们的赞助商页面来支持该项目。 只需单击一下即可：
+如果这个项目对你有帮助，欢迎扫码支持：
 
-<a href='https://tracking.gitads.io/?repo=ESTabBarController'><img src="https://images.gitads.io/ESTabBarController" alt="git-ad"/></a>
-<br><i>这则广告来自 <a href="https://tracking.gitads.io/?campaign=gitads&repo=ESTabBarController&redirect=gitads.io">GitAds</a> </i>
+| 支付宝 | 微信 |
+|--------|------|
+| ![支付宝](Resources/sponsorship_ali.JPG) | ![微信](Resources/sponsorship_wx.JPG) |
 
 
 ## 感谢
@@ -88,21 +111,22 @@ open ESTabBarController
 
 ## 关于
 
-ESTabBarController是由[lihao](mailto:lihao_iOS@hotmail.com)开发和维护。如果你在使用过程中遇到什么疑问或任何问题，欢迎提交 [issue](https://github.com/eggswift/ESTabBarController/issues) 随时交流。</br>
-如果你想为ESTabBarController输出代码，请提交 [Pull Request](https://github.com/eggswift/ESTabBarController/pulls)，我会尽可能快的去处理。</br>
+本项目由 [haochen](https://github.com/theNightLight) 维护。如有问题或建议，欢迎提交 [Issue](https://github.com/theNightLight/ESTabBarController/issues) 或 [Pull Request](https://github.com/theNightLight/ESTabBarController/pulls)。
 
-[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=https://github.com/eggswift/ESTabBarController)
-[![Twitter Follow](https://img.shields.io/twitter/follow/lihao_ios.svg?style=social)](https://twitter.com/lihao_iOS)
+## 更新日志
+
+详见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 许可证
 
 The MIT License (MIT)
 
-Copyright (c) 2013-2016 eggswift. All rights reserved.
+Copyright (c) 2013-2016 eggswift  
+Copyright (c) 2026 haochen
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+完整许可证文本见 [LICENSE](LICENSE)。
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+## 原作者
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+本项目基于 [eggswift/ESTabBarController](https://github.com/eggswift/ESTabBarController) 修改。原作者：[eggswift](https://github.com/eggswift/ESTabBarController)
 

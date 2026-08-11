@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import ESTabBarController
 
 enum ExampleProvider {
     static func systemStyle() -> UITabBarController {
@@ -30,9 +29,73 @@ enum ExampleProvider {
         
         return tabBarController
     }
+
+    static func systemTabStyle() -> UITabBarController {
+        let tabBarController = UITabBarController()
+
+        if #available(iOS 18.0, *) {
+            let tab1 = UITab(title: "Home", image: UIImage(named: "home"), identifier: "Home") { _ in
+                return ExampleViewController()
+            }
+            let tab2 = UITab(title: "Find", image: UIImage(named: "find"), identifier: "find") { _ in
+                return ExampleViewController()
+            }
+            let tab3 = UITab(title: "Photo", image: UIImage(named: "photo"), identifier: "photo") { _ in
+                return ExampleViewController()
+            }
+            let tab4 = UITab(title: "Favor", image: UIImage(named: "favor"), identifier: "favor") { _ in
+                return ExampleViewController()
+            }
+            let tab5 = UITab(title: "Me", image: UIImage(named: "home"), identifier: "Home") { _ in
+                return ExampleViewController()
+            }
+            let tab6 = UITab(title: "Message", image: UIImage(named: "message"), identifier: "message") { _ in
+                return ExampleViewController()
+            }
+            let tab7 = UITab(title: "Shop", image: UIImage(named: "shop"), identifier: "shop") { _ in
+                return ExampleViewController()
+            }
+            let tab8 = UITab(title: "Cardboard", image: UIImage(named: "cardboard"), identifier: "cardboard") { _ in
+                return ExampleViewController()
+            }
+
+            tabBarController.tabs = [tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8]
+            tabBarController.selectedTab = tab4
+        }
+
+        tabBarController.tabBar.shadowImage = nil
+
+        return tabBarController
+    }
     
     static func customStyle() -> ESTabBarController {
         let tabBarController = ESTabBarController()
+        if let tabBar = tabBarController.tabBar as? ESTabBar {
+            tabBar.usesSystemGlassEffect = false
+        }
+        let v1 = ExampleViewController()
+        let v2 = ExampleViewController()
+        let v3 = ExampleViewController()
+//        let v4 = ExampleViewController()
+//        let v5 = ExampleViewController()
+        
+        v1.tabBarItem = ESTabBarItem.init(title: "Home", image: UIImage(named: "home"), selectedImage: UIImage(named: "home_1"))
+        v2.tabBarItem = ESTabBarItem.init(title: "Find", image: UIImage(named: "find"), selectedImage: UIImage(named: "find_1"))
+        v3.tabBarItem = ESTabBarItem.init(title: "Photo", image: UIImage(named: "photo"), selectedImage: UIImage(named: "photo_1"))
+//        v4.tabBarItem = ESTabBarItem.init(title: "Favor", image: UIImage(named: "favor"), selectedImage: UIImage(named: "favor_1"))
+//        v5.tabBarItem = ESTabBarItem.init(title: "Me", image: UIImage(named: "me"), selectedImage: UIImage(named: "me_1"))
+        
+        tabBarController.viewControllers = [v1, v2, v3]//, v4, v5]
+        
+        return tabBarController
+    }
+    
+    static func mandatoryOldDesignStyle() -> ESTabBarController {
+        let tabBarController = ESTabBarController()
+        if let tabBar = tabBarController.tabBar as? ESTabBar {
+            tabBar.designType = .old
+            tabBar.backgroundColor = UIColor.white
+        }
         let v1 = ExampleViewController()
         let v2 = ExampleViewController()
         let v3 = ExampleViewController()
@@ -46,6 +109,87 @@ enum ExampleProvider {
         v5.tabBarItem = ESTabBarItem.init(title: "Me", image: UIImage(named: "me"), selectedImage: UIImage(named: "me_1"))
         
         tabBarController.viewControllers = [v1, v2, v3, v4, v5]
+        
+        return tabBarController
+    }
+    
+    static func customGlassStyle() -> ExampleGlassTabbarController {
+        let tabBarController = ExampleGlassTabbarController()
+        let v1 = ExampleViewController()
+        let v2 = ExampleViewController()
+        let v3 = UIViewController()
+        let v4 = ExampleViewController()
+        let v5 = ExampleViewController()
+        
+        v1.tabBarItem = ESTabBarItem.init(title: "Home", image: UIImage(named: "home"), selectedImage: UIImage(named: "home_1"))
+        v2.tabBarItem = ESTabBarItem.init(title: "Find", image: UIImage(named: "find"), selectedImage: UIImage(named: "find_1"))
+        v3.tabBarItem = ESTabBarItem.init(title: "Photo", image: UIImage(named: "photo"), selectedImage: UIImage(named: "photo_1"))
+        v4.tabBarItem = ESTabBarItem.init(title: "Favor", image: UIImage(named: "favor"), selectedImage: UIImage(named: "favor_1"))
+        v5.tabBarItem = ESTabBarItem.init(title: "Me", image: UIImage(named: "me"), selectedImage: UIImage(named: "me_1"))
+        
+        tabBarController.viewControllers = [v1, v2, v3, v4, v5]
+        
+        return tabBarController
+    }
+
+    static func customGlassWithBadgeStyle() -> ExampleGlassTabbarController {
+        let tabBarController = ExampleGlassTabbarController()
+        let v1 = ExampleViewController()
+        let v2 = ExampleViewController()
+        let v3 = ExampleViewController()
+        let v4 = ExampleViewController()
+        let v5 = ExampleViewController()
+
+        v1.tabBarItem = ESTabBarItem.init(title: "Home", image: UIImage(named: "home"), selectedImage: UIImage(named: "home_1"))
+        v2.tabBarItem = ESTabBarItem.init(title: "Find", image: UIImage(named: "find"), selectedImage: UIImage(named: "find_1"))
+        v3.tabBarItem = ESTabBarItem.init(title: "Photo", image: UIImage(named: "photo"), selectedImage: UIImage(named: "photo_1"))
+        v4.tabBarItem = ESTabBarItem.init(title: "Favor", image: UIImage(named: "favor"), selectedImage: UIImage(named: "favor_1"))
+        v5.tabBarItem = ESTabBarItem.init(title: "Me", image: UIImage(named: "me"), selectedImage: UIImage(named: "me_1"))
+
+        if let tabBarItem = v1.tabBarItem as? ESTabBarItem {
+            tabBarItem.badgeValue = "New"
+        }
+        if let tabBarItem = v2.tabBarItem as? ESTabBarItem {
+            tabBarItem.badgeValue = "99+"
+        }
+        if let tabBarItem = v3.tabBarItem as? ESTabBarItem {
+            tabBarItem.badgeValue = "1"
+            tabBarItem.badgeColor = UIColor.blue
+        }
+        if let tabBarItem = v4.tabBarItem as? ESTabBarItem {
+            tabBarItem.badgeValue = ""
+        }
+        if let tabBarItem = v5.tabBarItem as? ESTabBarItem {
+            tabBarItem.badgeValue = nil
+        }
+
+        tabBarController.viewControllers = [v1, v2, v3, v4, v5]
+
+        return tabBarController
+    }
+
+
+    static func customGlassMoreStyle() -> ExampleGlassTabbarController {
+        let tabBarController = ExampleGlassTabbarController()
+        let v1 = ExampleViewController()
+        let v2 = ExampleViewController()
+        let v3 = ExampleViewController()
+        let v4 = ExampleViewController()
+        let v5 = ExampleViewController()
+        let v6 = ExampleViewController()
+        let v7 = ExampleViewController()
+        let v8 = ExampleViewController()
+        
+        v1.tabBarItem = ESTabBarItem.init(title: "Home", image: UIImage(named: "home"), selectedImage: UIImage(named: "home_1"))
+        v2.tabBarItem = ESTabBarItem.init(title: "Find", image: UIImage(named: "find"), selectedImage: UIImage(named: "find_1"))
+        v3.tabBarItem = ESTabBarItem.init(title: "Photo", image: UIImage(named: "photo"), selectedImage: UIImage(named: "photo_1"))
+        v4.tabBarItem = ESTabBarItem.init(title: "Favor", image: UIImage(named: "favor"), selectedImage: UIImage(named: "favor_1"))
+        v5.tabBarItem = ESTabBarItem.init(title: "Me", image: UIImage(named: "me"), selectedImage: UIImage(named: "me_1"))
+        v6.tabBarItem = ESTabBarItem.init(title: "Message", image: UIImage(named: "message"), selectedImage: UIImage(named: "message_1"))
+        v7.tabBarItem = ESTabBarItem.init(title: "Shop", image: UIImage(named: "shop"), selectedImage: UIImage(named: "shop_1"))
+        v8.tabBarItem = ESTabBarItem.init(title: "Cardboard", image: UIImage(named: "cardboard"), selectedImage: UIImage(named: "cardboard_1"))
+        
+        tabBarController.viewControllers = [v1, v2, v3, v4, v5, v6, v7, v8]
         
         return tabBarController
     }
@@ -73,7 +217,7 @@ enum ExampleProvider {
         let tabBarController = UITabBarController()
         let v1 = ExampleViewController()
         let v2 = ExampleViewController()
-        let v3 = ExampleViewController()
+        let v3 = UIViewController()
         let v4 = ExampleViewController()
         let v5 = ExampleViewController()
         let v6 = ExampleViewController()
@@ -90,7 +234,7 @@ enum ExampleProvider {
         v8.tabBarItem = UITabBarItem.init(title: "Cardboard", image: UIImage(named: "cardboard"), selectedImage: UIImage(named: "cardboard_1"))
         
         tabBarController.viewControllers = [v1, v2, v3, v4, v5, v6, v7, v8]
-        
+        tabBarController.selectedIndex = 2
         return tabBarController
     }
     
@@ -270,12 +414,16 @@ enum ExampleProvider {
         return navigationController
     }
     
+    // 不建议在玻璃效果下用拦截。试了hook解决了拦截，但是解决不了玻璃放大效果收回的问题，拦截后效果会被冻结到当前状态 所以去掉了hook代码保持原样，玻璃样式 直接使用 public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool { 拦截
     static func customIrregularityStyle(delegate: UITabBarControllerDelegate?) -> ExampleNavigationController {
         let tabBarController = ESTabBarController()
         tabBarController.delegate = delegate
         tabBarController.title = "Irregularity"
-        tabBarController.tabBar.shadowImage = UIImage(named: "transparent")
-        tabBarController.tabBar.backgroundImage = UIImage(named: "background_dark")
+//        tabBarController.tabBar.shadowImage = UIImage(named: "transparent")
+//        tabBarController.tabBar.backgroundImage = UIImage(named: "background_dark")
+        if let tabBar = tabBarController.tabBar as? ESTabBar {
+            tabBar.itemCustomPositioning = .fillIncludeSeparator
+        }
         tabBarController.shouldHijackHandler = {
             tabbarController, viewController, index in
             if index == 2 {
@@ -497,8 +645,8 @@ enum ExampleProvider {
         return navigationController
     }
     
-    static func lottieSytle() -> ESTabBarController {
-        let tabBarController = ESTabBarController()
+    static func lottieSytle() -> ExampleGlassTabbarController {
+        let tabBarController = ExampleGlassTabbarController()
         let v1 = ExampleViewController()
         let v2 = ExampleViewController()
         let v3 = ExampleViewController()
